@@ -1,13 +1,14 @@
 import pygame
 from laser import Laser
 
-class Spacecship(pygame.sprite.Sprite): #Used to generate a sprite object
-    def __init__(self, screen_width, screen_height):
+class Spaceship(pygame.sprite.Sprite): #Used to generate a sprite object
+    def __init__(self, screen_width, screen_height, offset):
         super().__init__()
+        self.offset = offset
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.image = pygame.image.load("Sprites/spaceship.png")
-        self.rect = self.image.get_rect(midbottom = (self.screen_width/2, self.screen_height)) #Positions in the screen , given the coordinates
+        self.rect = self.image.get_rect(midbottom = (self.screen_width + self.offset, self.screen_height)) #Positions in the screen , given the coordinates
         self.speed = 6
         self.lasers_group = pygame.sprite.Group()
         self.laser_ready = True
@@ -42,5 +43,9 @@ class Spacecship(pygame.sprite.Sprite): #Used to generate a sprite object
     def recharge_laser(self):
         if not self.laser_ready:
             current_time = pygame.time.get_ticks()
-            if current_time - self.laser_time >= self.laser.delay:
+            if current_time - self.laser_time >= self.laser_delay:
                 self.laser_ready = True
+
+    def reset(self):
+        self.rect = self.image.get_rect(midbottom = ((self.screen_width + self.offset)/2, self.screen_height))
+        self.lasers_group.empty()
